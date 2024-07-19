@@ -1,6 +1,8 @@
 // Import the required libraries
 const express = require('express');
 const mysql = require('mysql2');
+const config = require('./config');
+const { Console } = require('console');
 
 // Create an instance of Express
 const app = express();
@@ -10,11 +12,12 @@ app.use(express.json());
 
 // Create a MySQL connection
 const db = mysql.createConnection({
-  host: 'your-host',
-  user: 'your-username',
-  password: 'your-password',
-  database: 'your-database'
+    host: config.HOST,
+    user: config.USER,
+    password: config.PASSWORD,
+    database: config.DB
 });
+
 
 // Connect to the MySQL database
 db.connect((err) => {
@@ -26,20 +29,34 @@ db.connect((err) => {
 });
 
 // Define a simple route to get data from a MySQL table
-app.get('/items', (req, res) => {
-  const query = 'SELECT * FROM items'; // Replace 'items' with your table name
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error executing query:', err);
-      res.status(500).json({ error: 'Database query failed' });
-      return;
-    }
-    res.json(results);
-  });
-});
+
+function f()
+{
+
+    app.get('/items', (req, res) => {
+      const query = 'SELECT * FROM customer'; // Replace 'items' with your table name
+      db.query(query, (err, results) => {
+        if (err) {
+          console.error('Error executing query:', err);
+          res.status(500).json({ error: 'Database query failed' });
+          return;
+        }
+        res.json(results);
+
+        
+      });
+    });
+}
+
+
+
+
+// app.post('/addcart', (req, res))
+
 
 // Start the Express server
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+ 
 });
