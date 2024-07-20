@@ -23,5 +23,7 @@ SET @testResult = IF(@id = @lastId AND @name = 'TEST CUSTOMER 53272' AND @mail =
 SELECT @testResult AS Result;
 
 -- Clean up: delete the test row
+SET SQL_SAFE_UPDATES =0;
 DELETE FROM customer 
 WHERE email = "customerTEST5864@gmail.com";
+SET SQL_SAFE_UPDATES =1;
