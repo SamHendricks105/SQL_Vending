@@ -1,3 +1,10 @@
+db.sql is the import file
+
+
+
+# DB tables
+
+
 ## Customer Table
 This table stores information about customers.
 
@@ -114,7 +121,7 @@ Stores The names of machine mangers
 | name              | VARCHAR(50)  | Name of manager                                  |
 
 ## Manager_machine Table
-This ajunction table for machines and managers. A manager can have many machines assigend to them. 
+This a junction table for machines and managers. A manager can have many machines assigend to them. 
 A machine can also have may mangers.
 
 | Column Name       | Data Type    | Description                                      |
