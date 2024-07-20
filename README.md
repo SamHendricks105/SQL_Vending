@@ -162,8 +162,8 @@ Stores requests made by customers. The requests are requests for sancks that cus
 
 ![Entity Relationship Diagram (ERD)](./images/vending_erd.png)
 
-
-# Test cases
+# CRUD Test cases 
+## CRUD (Create) Test cases
 
 ### INSERT customer test
 
@@ -786,4 +786,138 @@ END //
 
 DELIMITER ;
 
+```
+
+## CRUD (READ) Test cases
+
+
+## CRUD (Update) Test cases
+
+
+## CRUD (DELETE) Test cases
+
+### Snack delete test
+
+```sql
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TestSnackDelete`()
+BEGIN
+    DECLARE testResult VARCHAR(20);
+    DECLARE lastId INT;
+    
+    -- Step 1: Insert the row (without specifying the auto-incremented id)
+    INSERT INTO snack (cost, name, brand, country, sold_count) 
+    VALUES (
+        2.25,
+        'TEST snack 53272', 
+        'big test brand', 
+        'USA',
+        8
+    );
+    
+    -- Retrieve the last inserted id
+    SET lastId = LAST_INSERT_ID();
+
+    -- Step 2: Query the row
+    SELECT snack_id, name
+    INTO @id, @name
+    FROM snack
+    WHERE snack_id = lastId;
+
+    -- Step 3: Verify the insert
+    IF @id = lastId AND @name = 'TEST snack 53272' THEN
+        SET testResult = 'Row inserted';
+    ELSE
+        SET testResult = 'Test failed';
+    END IF;
+    
+    -- Output the result
+    SELECT testResult AS Result;
+    
+    -- Clean up the test data
+    SET SQL_SAFE_UPDATES = 0;
+    DELETE FROM snack 
+    WHERE name = 'TEST snack 53272';
+     SET SQL_SAFE_UPDATES = 1;
+    
+	if  (SELECT EXISTS 
+    (
+    SELECT 1
+    FROM snack
+    WHERE name = 'TEST snack 53272'
+    )
+    ) = 0
+    then SET testResult = 'Test passed';
+    ELSE
+        SET testResult = 'Test failed';
+    END IF;
+    
+    -- Output the result
+    SELECT testResult AS Result;
+    
+    
+    
+END
+```
+### Address delete test 
+
+```sql
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TestAddressDelete`()
+BEGIN
+    DECLARE testResult VARCHAR(20);
+    DECLARE lastId INT;
+    
+    -- Step 1: Insert the row
+    INSERT INTO address (address, city, state, postal_code, country, latitude, longitude, created_at) 
+    VALUES (
+        '123 Test St',
+        'Test City', 
+        'TS',
+        '12345',
+        'Test Country',
+        12.345678,
+        98.765432,
+        NOW()
+    );
+    
+    -- Retrieve the last inserted id
+    SET lastId = LAST_INSERT_ID();
+
+    -- Step 2: Query the row
+    SELECT address_id, address
+    INTO @id, @address
+    FROM address
+    WHERE address_id = lastId;
+
+    -- Step 3: Verify the insert
+    IF @id = lastId AND @address = '123 Test St' THEN
+        SET testResult = 'Row inserted';
+    ELSE
+        SET testResult = 'Test failed';
+    END IF;
+    
+    -- Output the result
+    SELECT testResult AS Result;
+    
+    -- Clean up the test data
+    SET SQL_SAFE_UPDATES = 0;
+    DELETE FROM address 
+    WHERE address = '123 Test St';
+    SET SQL_SAFE_UPDATES = 1;
+    
+    -- Verify deletion
+    IF (SELECT EXISTS (
+        SELECT 1
+        FROM address
+        WHERE address = '123 Test St'
+    )) = 0 THEN
+        SET testResult = 'Test passed';
+    ELSE
+        SET testResult = 'Test failed';
+    END IF;
+    
+    -- Output the result
+    SELECT testResult AS Result;
+
+
+END
 ```
